@@ -6,17 +6,21 @@ class DexTrade:
     pair = "BTCUSDT"
     urlMarkets = "https://api.dex-trade.com/v1/public/symbols"
     urlOrderbooks = f"https://api.dex-trade.com/v1/public/book?pair={pair}"
-
     # markets = requests.get(url=urlMarkets, headers=headers)
+
+    def get_funcname(self):
+        return DexTrade.__name__
+
     def get_orderbook(self):
         orderbook = requests.get(url=self.urlOrderbooks, headers=self.headers).json()
         # return orderbook
         topAsk = float(orderbook["data"]["sell"][0]['rate'])
+        ask_volume = float(orderbook["data"]["sell"][0]['volume'])
         topBid = float(orderbook["data"]["buy"][0]['rate'])
-        return {"topAsk": topAsk, "topBid": topBid}
+        bid_volume = float(orderbook["data"]["buy"][0]['volume'])
+        return {"topAsk": topAsk, "topBid": topBid, "ask_volume": ask_volume, "bid_volume": bid_volume}
 
-
-# dextrade = DexTrade()
+# dextrade = DexTrade()  # class instance
 # orderbook = dextrade.get_orderbook()
 # topask = dextrade.get_orderbook()
 # topbit = dextrade.get_orderbook()

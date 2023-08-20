@@ -11,11 +11,16 @@ class Whitebit:
 
     # markets = requests.get(url=urlMarkets, headers=headers)
 
+    def get_funcname(self):
+        return Whitebit.__name__
+
     def get_orderbook(self):
         orderbook = requests.get(url=self.orderbookUrl, headers=self.headers).json()
         topAsk = float(orderbook["result"]["asks"][0][0])
+        ask_volume = float(orderbook["result"]["asks"][0][1])
         topBid = float(orderbook["result"]["bids"][0][0])
-        return {"topAsk": topAsk, "topBid": topBid}
+        bid_volume = float(orderbook["result"]["bids"][0][1])
+        return {"topAsk": topAsk, "topBid": topBid, "ask_volume": ask_volume, "bid_volume": bid_volume}
         # return orderbook
 
 # whitebit = Whitebit()
