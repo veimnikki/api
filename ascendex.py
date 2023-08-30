@@ -13,12 +13,13 @@ class Ascendex:
         self.markets = {}
 
     def get_markets(self):
-        markets = requests.get(url=self.urlMarket, headers=self.headers).json()
+        markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
         for market in markets['data']:
-            if 'USD' in market['symbol']:
-                coin = market['symbol'].split('USD')[0]
+            if '/USD' in market['symbol']:
+                coin = market['symbol'].split('/USD')[0]
                 self.markets.update({coin: market['symbol']})
         return (self.markets)
+        # return(markets)
 
     async def get_orderbook(self, symbol):
         async with aiohttp.ClientSession() as session:  # менеджер отправления запросов
@@ -34,3 +35,9 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+ascendex = Ascendex()
+# orderbook = asyncio.run(coinstore.get_orderbook("BTCUSDT"))
+# print(orderbook)
+markets = ascendex.get_markets()
+print(markets)
