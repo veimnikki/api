@@ -3,7 +3,6 @@ import requests
 import asyncio
 import aiohttp
 
-
 class Ascendex:
     def __init__(self):
         self.headers = {"Content-Type": "application/json"}
@@ -28,6 +27,9 @@ class Ascendex:
                 # print(ob)
         return {'top_ask': ob["data"]["data"]["asks"][0][0], 'top_bid': ob["data"]["data"]["bids"][0][0]}
 
+ascendex = Ascendex()
+markets = ascendex.get_markets()
+print(markets)
 async def main():
     orderbook = Ascendex()
     result = await orderbook.get_orderbook('BTCUSDT')
@@ -35,9 +37,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
-ascendex = Ascendex()
-# orderbook = asyncio.run(coinstore.get_orderbook("BTCUSDT"))
-# print(orderbook)
-markets = ascendex.get_markets()
-print(markets)

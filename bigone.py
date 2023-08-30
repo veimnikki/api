@@ -25,6 +25,11 @@ class Bigone:
                 # print(ob)
         return {"top_ask": ob["data"]["asks"][0]["price"], "top_bid": ob["data"]["bids"][0]["price"]}
 
+
+bigone = Bigone()
+markets = bigone.get_markets()
+print(markets)
+
 async def main():
     orderbook = Bigone()
     result = await orderbook.get_orderbook('BTC-USDT')
@@ -32,9 +37,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
-bigone = Bigone()
-# orderbook = asyncio.run(bigone.get_orderbook("BTCUSDT"))
-# print(orderbook)
-markets = bigone.get_markets()
-print(markets)
