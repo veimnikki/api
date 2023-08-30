@@ -1,25 +1,38 @@
-# HERE IS SOME ERROR WITH PATH
 import requests
-
+import aiohttp
+import asyncio
 
 class Woo:
     def __init__(self):
         self.headers = {"Content-Type": "application/json"}
-        self.symbol = "BTC/USDT"
-        self.urlOrderbooks = f"https://api.woo.org/v1/public/orderbook/{self.symbol}"
+        self.urlOrderbooks = f"https://api.woo.org/v1/public/orderbook/"
+        self.urlMarkets = f"https://api.woo.org/v1/public/info"
+        self.markets = {}
 
-    def get_funcname(self):
-        return Woo.__name__
+    def get_markets(self):
+        markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
+        for market in markets['rows']:
+            if '_USD' in market['symbol']:
+                coin = market['symbol'].split('_USD')[0]
+                self.markets.update({coin: market['symbol']})
+        return (self.markets)
+        # return(markets)
 
-    def get_orderbook(self):
-        orderbook = requests.get(url=self.urlOrderbooks, headers=self.headers).json()
-        return orderbook
-        # topAsk = float(orderbook["data"]["asks"][0]["price"])
-        # ask_volume = float(orderbook["data"]["asks"][0]["quantity"])
-        # topBid = float(orderbook["data"]["bids"][0]["price"])
-        # bid_volume = float(orderbook["data"]["bids"][0]["quantity"])
-        # return {"topAsk": topAsk, "topBid": topBid, "ask_volume": ask_volume, "bid_volume": bid_volume}
+    async def get_orderbook(self, symbol):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(self.urlOrderbooks + symbol) as response:
+                ob = await response.json()
+                # print(ob)
+        return {"top_ask": ob['asks'][0]['price'], "top_bid": ob['bids'][0]['price']}
 
 woo = Woo()
-orderbook = woo.get_orderbook()
-print(orderbook)
+markets = woo.get_markets()
+print(markets)
+
+async def main():
+    orderbook = Woo()
+    result = await orderbook.get_orderbook('SPOT_BTC_USDT')
+    print(result)
+
+if __name__ == "__main__":
+    asyncio.run(main())
