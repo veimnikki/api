@@ -50,7 +50,6 @@ class Bitspay:
         async with aiohttp.ClientSession() as session:
             async with session.get(self.urlOrderbooks + symbol) as response:
                 ob = await response.json()
-                # return(ob)
         return {"top_ask": ob["asks"][0]["price"], "ask_vol": ob["asks"][0]["quantity"],
                 "top_bid": ob["bids"][0]["price"], "bid_vol": ob["bids"][0]["quantity"],
                 "ts_exchange": 0}
