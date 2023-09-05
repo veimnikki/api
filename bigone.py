@@ -12,6 +12,7 @@ class Bigone:
         self.markets = {}
         self.fees = {'SPOT': {'Maker': {'LMCA': 0.2, 'Altkoins': 0.2}, 'Taker': {'LMCA': 0.2, 'Altkoins': 0.2}},
                      'FUTURES': {'Maker': {'LMCA': 0.2, 'Altkoins': 0.2}, 'Taker': {'LMCA': 0.6, 'Altkoins': 0.6}}}
+        self.requestLimit = 3000  # 500 requests per 10 sec
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
