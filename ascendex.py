@@ -1,5 +1,5 @@
 import requests
-#  import time
+import time
 import asyncio
 import aiohttp
 
@@ -8,32 +8,44 @@ class Ascendex:
         self.headers = {"Content-Type": "application/json"}
         self.symbol = "BTC/USDT"
         self.urlOrderbooks = f"https://ascendex.com/api/pro/v1/depth?symbol="
-        self.urlMarkets = f"https://ascendex.com/api/pro/v1/spot/ticker"
+        self.urlMarkets = f"https://ascendex.com/api/pro/v1/margin/products"
+        self.fees = {'SPOT': {'Maker': {'LMCA': 0.1, 'Altkoins': 0.2}, 'Taker': {'LMCA': 0.1, 'Altkoins': 0.2}},
+                    'FUTURES': {'Maker': {'LMCA': 0.1, 'Altkoins': 0.2}, 'Taker': {'LMCA': 0.1, 'Altkoins': 0.2}}}
         self.markets = {}
+        self.requestLimit = 300
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
         for market in markets['data']:
-            if '/USD' in market['symbol']:
-                coin = market['symbol'].split('/USD')[0]
+            if 'USDT' in market['symbol']:
+                coin = market['symbol'].split('/USDT')[0]
                 self.markets.update({coin: market['symbol']})
-        return (self.markets)
-        # return(markets)
+        return self.markets
+
+    def get_all_fees(self):
+        return {'comission': self.fees}
 
     async def get_orderbook(self, symbol):
-        async with aiohttp.ClientSession() as session:  # менеджер отправления запросов
+        async with aiohttp.ClientSession() as session:
             async with session.get(self.urlOrderbooks + symbol) as response:
                 ob = await response.json()
-                # print(ob)
-        return {'top_ask': ob["data"]["data"]["asks"][0][0], 'top_bid': ob["data"]["data"]["bids"][0][0]}
+        return {'top_ask': ob["data"]["data"]["asks"][0][0], 'ask_vol': ob["data"]["data"]["asks"][0][1],
+                'top_bid': ob["data"]["data"]["bids"][0][0], 'bid_vol': ob["data"]["data"]["bids"][0][1],
+                'ts_exchange': ob["data"]["data"]["ts"]}
+        # return ob
 
-ascendex = Ascendex()
-markets = ascendex.get_markets()
-print(markets)
 async def main():
     orderbook = Ascendex()
-    result = await orderbook.get_orderbook('BTCUSDT')
-    print(result)
+    # result = await orderbook.get_orderbook('BTC/USDT')
+    # print(result)
+    while True:
+        t0 = time.time()
+        result = asyncio.create_task(orderbook.get_orderbook('BTC/USDT'))
+        await result
+        print(time.time() - t0)
 
 if __name__ == "__main__":
+    markets = Ascendex()
+    print(markets.get_markets())
+    print(markets.get_all_fees())
     asyncio.run(main())
