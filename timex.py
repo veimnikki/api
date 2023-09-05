@@ -11,6 +11,7 @@ class Timex:
         self.markets = {}
         self.urlFees = f"https://plasma-relay-backend.timex.io/public/markets/fees"
         self.fees = {}
+        self.requestLimit = 100
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
