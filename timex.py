@@ -11,7 +11,7 @@ class Timex:
         self.markets = {}
         self.urlFees = f"https://plasma-relay-backend.timex.io/public/markets/fees"
         self.fees = {}
-        self.requestLimit = 100
+        self.rateLimits = 1882
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
@@ -22,23 +22,16 @@ class Timex:
         return (self.markets)
         # return markets
 
-    def get_all_fees(self):
-        fees = requests.get(url=self.urlFees, headers=self.headers).json()
-        for fee in fees:
-            if ('USDT' in fee['symbol']) and ('USDCUSDT' not in fee['symbol']):
-                name = fee['symbol'].split('USDT')
-                name = ''.join(name)
-                maker_fee = fee['fees'][0]['makerFee']
-                taker_fee = fee['fees'][0]['takerFee']
-                self.fees.update({name: {"Maker": maker_fee, "Taker": taker_fee}})
-        return self.fees
-        # return fees
 
     def get_coin_fee(self, symbol):
-        if symbol in self.fees:
-            return {symbol: {"Maker": self.fees[symbol]["Maker"], "Taker": self.fees[symbol]["Taker"]}}
-        else:
-            return {}
+        fees = requests.get(url=self.urlFees, headers=self.headers).json()
+        for fee in fees:
+            if symbol + 'USDT' in fee['symbol']:
+                maker_fee = fee['fees'][0]['makerFee']
+                taker_fee = fee['fees'][0]['takerFee']
+                self.fees.update({symbol: {"Maker": maker_fee, "Taker": taker_fee}})
+        return self.fees
+        # return fees
 
     async def get_orderbook(self, symbol):
         async with aiohttp.ClientSession() as session:
@@ -63,6 +56,5 @@ async def main():
 if __name__ == "__main__":
     markets = Timex()
     print(markets.get_markets())
-    print(markets.get_all_fees())
-    print(markets.get_coin_fee('BTC'))
+    print(markets.get_coin_fee('EOS'))
     asyncio.run(main())
