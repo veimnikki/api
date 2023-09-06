@@ -10,7 +10,7 @@ class CPatex:
         self.endOrderbooks = f"&limit=1000"
         self.urlMarkets = f"https://api.c-patex.com/api/v1/public/tickers"
         self.markets = {}
-        self.rateLimits = 1865
+        self.requestLimit = 1865
         self.urlFee = f"https://api.c-patex.com/api/v1/public/book?market="
         self.endUrlFee = "&side=sell&offset=0&limit=1"
         self.fees = {}
@@ -25,11 +25,10 @@ class CPatex:
         # return(markets)
 
     def get_coin_fee(self, symbol):
-        newSymbol = symbol + '_USDT'
-        url = self.urlFee + newSymbol + self.endUrlFee
+        url = self.urlFee + symbol + self.endUrlFee
         fees = requests.get(url=url, headers=self.headers).json()
         for fee in fees['result']['orders']:
-            if newSymbol == fee['market']:
+            if symbol == fee['market']:
                 maker_fee = fee['makerFee']
                 taker_fee = fee['takerFee']
                 self.fees.update({symbol: {"Maker": maker_fee, "Taker": taker_fee}})
@@ -57,5 +56,5 @@ async def main():
 if __name__ == "__main__":
     markets = CPatex()
     print(markets.get_markets())
-    print(markets.get_coin_fee('BTC'))
+    print(markets.get_coin_fee('BTC_USDT'))
     asyncio.run(main())
