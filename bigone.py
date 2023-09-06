@@ -12,7 +12,7 @@ class Bigone:
         self.markets = {}
         self.fees = {'SPOT': {'Maker': 0.2, 'Taker': 0.2}, 'FUTURES': {'Maker': 0.2, 'Taker': 0.6}}
         self.futures = ['FIL-USDT', 'UNI-USDT', 'ETH-USDT', 'BTC-USDT', 'DOT-USDT', 'EOS-USDT']
-        self.requestLimit = 1875
+        self.rateLimits = 1875
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
@@ -23,7 +23,7 @@ class Bigone:
         return(self.markets)
 
     def get_coin_fee(self, symbol):
-        if symbol in self.markets.values():
+        if symbol in self.markets:
             if symbol in self.futures:
                 return {symbol: self.fees['FUTURES']}
             else:
@@ -53,5 +53,5 @@ async def main():
 if __name__ == "__main__":
     markets = Bigone()
     print(markets.get_markets())
-    print(markets.get_coin_fee('FTM5S-USDT'))
+    print(markets.get_coin_fee('FTM5S'))
     asyncio.run(main())
