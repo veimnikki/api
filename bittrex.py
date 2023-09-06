@@ -12,7 +12,7 @@ class Bittrex:
         self.urlMarkets = f"https://api.bittrex.com/v3/markets"
         self.markets = {}
         self.fees = {'Maker': 0.10, 'Taker': 0.15}
-        self.rateLimits = 1883
+        self.requestLimit = 1883
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
@@ -23,7 +23,7 @@ class Bittrex:
         return (self.markets)
 
     def get_coin_fee(self, symbol):
-        if symbol in self.markets:
+        if symbol in self.markets.values():
             return {symbol: self.fees}
         else:
             return {}
@@ -49,5 +49,5 @@ async def main():
 if __name__ == "__main__":
     markets = Bittrex()
     print(markets.get_markets())
-    print(markets.get_coin_fee('BTC'))
+    print(markets.get_coin_fee('BTC-USDT'))
     asyncio.run(main())
