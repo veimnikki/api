@@ -10,10 +10,10 @@ class CPatex:
         self.endOrderbooks = f"&limit=1000"
         self.urlMarkets = f"https://api.c-patex.com/api/v1/public/tickers"
         self.markets = {}
-        self.requestsLimit = 1000  # Default 50; min 1; max 1000
+        self.rateLimits = 1865
         self.urlFee = f"https://api.c-patex.com/api/v1/public/book?market="
         self.endUrlFee = "&side=sell&offset=0&limit=1"
-        self.fee = {}
+        self.fees = {}
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
@@ -25,20 +25,15 @@ class CPatex:
         # return(markets)
 
     def get_coin_fee(self, symbol):
-        url = self.urlFee + symbol + self.endUrlFee
+        newSymbol = symbol + '_USDT'
+        url = self.urlFee + newSymbol + self.endUrlFee
         fees = requests.get(url=url, headers=self.headers).json()
-        try:
-            for fee in fees['result']['orders']:
-                if ('_USDT' in fee['market']) and ('USDC_USDT' not in fee['market']):
-                    name = fee['market'].split('_USDT')
-                    name = ''.join(name)
-                    maker_fee = fee['makerFee']
-                    taker_fee = fee['takerFee']
-                    self.fee.update({name: {"Maker": maker_fee, "Taker": taker_fee}})
-            return self.fee
-        except TypeError:
-            return {}
-
+        for fee in fees['result']['orders']:
+            if newSymbol == fee['market']:
+                maker_fee = fee['makerFee']
+                taker_fee = fee['takerFee']
+                self.fees.update({symbol: {"Maker": maker_fee, "Taker": taker_fee}})
+            return self.fees
         # return fees
 
     async def get_orderbook(self, symbol):
@@ -62,5 +57,5 @@ async def main():
 if __name__ == "__main__":
     markets = CPatex()
     print(markets.get_markets())
-    print(markets.get_coin_fee("BTC_USDT"))
+    print(markets.get_coin_fee('BTC'))
     asyncio.run(main())
