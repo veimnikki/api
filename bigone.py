@@ -10,9 +10,9 @@ class Bigone:
         self.endOrderbook = "/depth"
         self.urlMarkets = f"https://big.one/api/v3/asset_pairs"
         self.markets = {}
-        self.fees = {'SPOT': {'Maker': {'LMCA': 0.2, 'Altkoins': 0.2}, 'Taker': {'LMCA': 0.2, 'Altkoins': 0.2}},
-                     'FUTURES': {'Maker': {'LMCA': 0.2, 'Altkoins': 0.2}, 'Taker': {'LMCA': 0.6, 'Altkoins': 0.6}}}
-        self.requestLimit = 3000  # 500 requests per 10 sec
+        self.fees = {'SPOT': {'Maker': 0.2, 'Taker': 0.2}, 'FUTURES': {'Maker': 0.2, 'Taker': 0.6}}
+        self.futures = ['FIL-USDT', 'UNI-USDT', 'ETH-USDT', 'BTC-USDT', 'DOT-USDT', 'EOS-USDT']
+        self.requestLimit = 1875
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
@@ -22,8 +22,14 @@ class Bigone:
                 self.markets.update({coin: market['name']})
         return(self.markets)
 
-    def get_all_fees(self):
-        return {'comission': self.fees}
+    def get_coin_fee(self, symbol):
+        if symbol in self.markets.values():
+            if symbol in self.futures:
+                return {symbol: self.fees['FUTURES']}
+            else:
+                return {symbol: self.fees['SPOT']}
+        else:
+            return {}
 
     async def get_orderbook(self, symbol):
         async with aiohttp.ClientSession() as session:
@@ -47,5 +53,5 @@ async def main():
 if __name__ == "__main__":
     markets = Bigone()
     print(markets.get_markets())
-    print(markets.get_all_fees())
+    print(markets.get_coin_fee('FTM5S-USDT'))
     asyncio.run(main())
