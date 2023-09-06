@@ -10,9 +10,8 @@ class Bitspay:
         self.urlMarkets = f"https://api.bitspay.io/getavailablepairs/"
         self.urlFees = f"https://api.bitspay.io/getSelectedMarket/"
         self.markets = {}
-        self.all_fees = {}
         self.fee = {}
-        self.requestLimit = 1875
+        self.rateLimits = 1875
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
@@ -23,7 +22,6 @@ class Bitspay:
         return (self.markets)
         # return(markets)
 
-
     def get_coin_fee(self, symbol):
         url = self.urlFees + symbol
         fees = requests.get(url=url, headers=self.headers).json()
@@ -33,7 +31,6 @@ class Bitspay:
             taker_fee = fee['sellfee']
             self.fee.update({name: {"Maker": maker_fee, "Taker": taker_fee}})
         return self.fee
-        # return fees
 
     async def get_orderbook(self, symbol):
         async with aiohttp.ClientSession() as session:
