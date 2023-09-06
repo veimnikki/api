@@ -11,7 +11,7 @@ class Bitspay:
         self.urlFees = f"https://api.bitspay.io/getSelectedMarket/"
         self.markets = {}
         self.fee = {}
-        self.rateLimits = 1875
+        self.requestLimit = 1875
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
@@ -23,7 +23,7 @@ class Bitspay:
         # return(markets)
 
     def get_coin_fee(self, symbol):
-        url = self.urlFees + symbol
+        url = self.urlFees + symbol + '_USDT'
         fees = requests.get(url=url, headers=self.headers).json()
         for fee in fees['marketdetails']:
             name = fee['vendor']
@@ -53,5 +53,5 @@ async def main():
 if __name__ == "__main__":
     markets = Bitspay()
     print(markets.get_markets())
-    print(markets.get_coin_fee('BTC_USDT'))
+    print(markets.get_coin_fee('BTC'))
     asyncio.run(main())
