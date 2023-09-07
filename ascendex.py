@@ -11,7 +11,7 @@ class Ascendex:
         self.fees = {'SPOT': {'Maker': {'LMCA': 0.1, 'Altkoins': 0.2}, 'Taker': {'LMCA': 0.1, 'Altkoins': 0.2}},
                     'FUTURES': {'Maker': {'LMCA': 0.4, 'Altkoins': 0.4}, 'Taker': {'LMCA': 0.6, 'Altkoins': 0.6}}}
         self.markets = {}
-        self.rateLimits = 126
+        self.requestLimit = 126
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
@@ -21,8 +21,8 @@ class Ascendex:
                 self.markets.update({coin: market['symbol']})
         return self.markets
 
-    def get_all_fees(self):
-        return {'comission': self.fees}
+    def get_coin_fee(self):
+        return self.fees
 
     async def get_orderbook(self, symbol):
         async with aiohttp.ClientSession() as session:
@@ -46,5 +46,5 @@ async def main():
 if __name__ == "__main__":
     markets = Ascendex()
     print(markets.get_markets())
-    print(markets.get_all_fees())
+    print(markets.get_coin_fee())
     asyncio.run(main())
