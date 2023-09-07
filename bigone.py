@@ -12,7 +12,7 @@ class Bigone:
         self.markets = {}
         self.fees = {'SPOT': {'Maker': 0.2, 'Taker': 0.2}, 'FUTURES': {'Maker': 0.2, 'Taker': 0.6}}
         self.futures = ['FIL-USDT', 'UNI-USDT', 'ETH-USDT', 'BTC-USDT', 'DOT-USDT', 'EOS-USDT']
-        self.requestLimit = 1875
+        self.requestLimit = 239
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
