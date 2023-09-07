@@ -6,13 +6,12 @@ import aiohttp
 class Ascendex:
     def __init__(self):
         self.headers = {"Content-Type": "application/json"}
-        self.symbol = "BTC/USDT"
         self.urlOrderbooks = f"https://ascendex.com/api/pro/v1/depth?symbol="
         self.urlMarkets = f"https://ascendex.com/api/pro/v1/margin/products"
         self.fees = {'SPOT': {'Maker': {'LMCA': 0.1, 'Altkoins': 0.2}, 'Taker': {'LMCA': 0.1, 'Altkoins': 0.2}},
-                    'FUTURES': {'Maker': {'LMCA': 0.1, 'Altkoins': 0.2}, 'Taker': {'LMCA': 0.1, 'Altkoins': 0.2}}}
+                    'FUTURES': {'Maker': {'LMCA': 0.4, 'Altkoins': 0.4}, 'Taker': {'LMCA': 0.6, 'Altkoins': 0.6}}}
         self.markets = {}
-        self.requestLimit = 300
+        self.rateLimits = 126
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
