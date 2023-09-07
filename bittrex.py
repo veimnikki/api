@@ -12,7 +12,7 @@ class Bittrex:
         self.urlMarkets = f"https://api.bittrex.com/v3/markets"
         self.markets = {}
         self.fees = {'Maker': 0.10, 'Taker': 0.15}
-        self.requestLimit = 1883
+        self.requestLimit = 576
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
