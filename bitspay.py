@@ -10,8 +10,8 @@ class Bitspay:
         self.urlMarkets = f"https://api.bitspay.io/getavailablepairs/"
         self.urlFees = f"https://api.bitspay.io/getSelectedMarket/"
         self.markets = {}
-        self.fee = {}
-        self.requestLimit = 1875
+        self.fees = {}
+        self.requestLimit = 1275
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
@@ -26,11 +26,10 @@ class Bitspay:
         url = self.urlFees + symbol
         fees = requests.get(url=url, headers=self.headers).json()
         for fee in fees['marketdetails']:
-            if symbol == fee['pair']:
-                maker_fee = fee['buyfee']
-                taker_fee = fee['sellfee']
-                self.fee.update({symbol: {"Maker": maker_fee, "Taker": taker_fee}})
-        return self.fee
+            maker_fee = fee['buyfee']
+            taker_fee = fee['sellfee']
+            self.fees.update({symbol: {"Maker": maker_fee, "Taker": taker_fee}})
+        return self.fees
         # return fees
 
     async def get_orderbook(self, symbol):
