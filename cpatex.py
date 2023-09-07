@@ -10,7 +10,7 @@ class CPatex:
         self.endOrderbooks = f"&limit=1000"
         self.urlMarkets = f"https://api.c-patex.com/api/v1/public/tickers"
         self.markets = {}
-        self.requestLimit = 1865
+        self.requestLimit = 3  # Ban on 4th iteration
         self.urlFee = f"https://api.c-patex.com/api/v1/public/book?market="
         self.endUrlFee = "&side=sell&offset=0&limit=1"
         self.fees = {}
