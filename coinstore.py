@@ -17,7 +17,7 @@ class Coinstore:
         self.futuresOnly = {'LTCUSDT', 'ETCUSDT', 'EOSUSDT', 'BCHUSDT', 'THETAUSDT', 'ATOMUSDT', 'HBARUSDT',
                         'KSMUSDT', 'ICPUSDT', '1MWAGMIGAMESUSDT', 'SOLUSDT'}
         self.markets = {}
-        self.requestLimit = 1876
+        self.requestLimit = 1274
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarket, headers=self.headers).json()
