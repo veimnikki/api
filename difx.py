@@ -13,7 +13,7 @@ class Difx:
         self.markets = {}
         self.urlFees = f"https://api-v2.difx.com/open/api/v1/pairs?symbol="
         self.fees = {}
-        self.requestLimit = 1881
+        self.requestLimit = 532  # BAN on 533rd request
 
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
