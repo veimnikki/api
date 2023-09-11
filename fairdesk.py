@@ -18,7 +18,7 @@ class Fairdesk:
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
         for market in markets['data']:
-            if '/USDT' in market['displayName']:
+            if ('/USDT' in market['displayName']) and ('USDC/USDT' not in market['displayName']):
                 coin = market['displayName'].split('/USDT')[0]
                 self.markets.update({coin: market['displayName']})
         return(self.markets)
