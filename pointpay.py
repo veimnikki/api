@@ -18,8 +18,8 @@ class Pointpay:
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
         for market in markets['result']:
-            if '_USD' in market:
-                coin = market.split('_USD')[0]
+            if ('_USDT' in market) and ('USDC_USDT' not in market):
+                coin = market.split('_USDT')[0]
                 self.markets.update({coin: market})
         return(self.markets)
         # return(markets)
