@@ -15,7 +15,7 @@ class Whitebit:
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
         for market in markets['result']:
-            if '_USD' in market['name']:
+            if ('_USDT' in market['name']) and ('USDC_USDT' not in market['name']):
                 coin = market['name'].split('_USD')[0]
                 self.markets.update({coin: market['name']})
         return (self.markets)
