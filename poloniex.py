@@ -15,7 +15,7 @@ class Poloniex:
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
         for market in markets:
-            if '_USD' in market['symbol']:
+            if ('_USDT' in market['symbol']) and ('USDC_USDT' in market['symbol']):
                 coin = market['symbol'].split('_USD')[0]
                 self.markets.update({coin: market['symbol']})
         return (self.markets)
