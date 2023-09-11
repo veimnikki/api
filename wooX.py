@@ -15,8 +15,8 @@ class Woo:
     def get_markets(self):
         markets = requests.get(url=self.urlMarkets, headers=self.headers).json()
         for market in markets['rows']:
-            if '_USD' in market['symbol']:
-                coin = market['symbol'].split('_USD')[0]
+            if ('_USDT' in market['symbol']) and ('USDC_USDT' not in market['symbol']):
+                coin = market['symbol'].split('_USDT')[0]
                 self.markets.update({coin: market['symbol']})
         return (self.markets)
         # return(markets)
